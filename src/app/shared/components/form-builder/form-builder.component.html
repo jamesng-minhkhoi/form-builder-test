@@ -1,0 +1,80 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="flex-col justify-center gap-5">
+    <h1>Add a New Question</h1>
+
+    <!-- Question -->
+    <div>
+      <mat-form-field>
+        <mat-label for="question">Question</mat-label>
+        <input
+          matInput
+          id="question"
+          type="text"
+          formControlName="questionType"
+          placeholder="Type question here "
+          required
+        />
+        <!-- <div *ngIf="myForm.get('question').hasError('required')" class="error">
+        Question is required.
+      </div> -->
+      </mat-form-field>
+    </div>
+
+    <!-- Type: Checkbox / Paragraph -->
+    <div>
+      <mat-form-field>
+        <mat-label for="questionType">Question Type</mat-label>
+        <mat-select id="questionType" formControlName="questionType" required>
+          <mat-option
+            *ngFor="let option of questionTypeOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+        <!-- <div *ngIf="myForm.get('questionType').hasError('required')" class="error">
+        Please select an option.
+      </div> -->
+      </mat-form-field>
+    </div>
+
+    <!-- Answers -->
+    <div>
+      <span> Answers</span>
+      <div formArrayName="questionAnswers">
+        <div *ngFor="let item of questionAnswers.controls; index as i">
+          <mat-form-field
+            *ngIf="
+              (questionTypeValue() == 'Checkbox' && i > 0) ||
+              (questionTypeValue() == 'Paragraph' && i == 0)
+            "
+            [formGroupName]="i"
+          >
+            <input
+              matInput
+              type="text"
+              formControlName="answer"
+              placeholder="Add Answer Option"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <button
+      *ngIf="questionTypeValue() == 'Checkbox'"
+      mat-button
+      color="primary"
+      (click)="addQuestionAnswer()"
+    >
+      Add another answer
+    </button>
+    <div>
+      <mat-checkbox> Allow user to specify thier own answer </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox> Field is required </mat-checkbox>
+    </div>
+    <button mat-raised-button color="warn" type="submit">Submit</button>
+  </div>
+</form>
